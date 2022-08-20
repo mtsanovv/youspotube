@@ -42,7 +42,7 @@ class ArgvParser:
         params[constants.SPOTIFY_TOKEN_PARAMETER] = sys.argv[3]
         
         # first 4 arguments are always there and after that we put the youtube-spotify pairs so we should always have an even number of argv
-        if self.argv_count % 2 == 0:
+        if self.argv_count % 2 != 0:
             raise ConfigurationError('Command line arguments should be an even number - are you missing a Spotify or a YouTube playlist ID?')
         
         for i in range(4, self.argv_count):

@@ -1,6 +1,6 @@
 import youspotube.constants as constants
-from youspotube.argv import ArgvParser
-from youspotube.param_collector import CfgFileParameterCollector, CmdLineParameterCollector
+from youspotube.configuration.argv import ArgvParser
+from youspotube.configuration.param_collector import CfgFileParameterCollector, CmdLineParameterCollector
 
 class Configuration:
     def __init__(self):

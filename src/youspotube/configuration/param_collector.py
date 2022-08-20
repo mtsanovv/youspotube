@@ -1,5 +1,5 @@
-from youspotube.argv import ArgvParser
-from youspotube.yaml_parser import YamlParser
+from youspotube.configuration.argv import ArgvParser
+from youspotube.util.yaml_parser import YamlParser
 from youspotube.exceptions import ConfigurationError
 import youspotube.constants as constants
 

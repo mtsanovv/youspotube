@@ -1,8 +1,8 @@
 import sys
-from youspotube.configurator import Configuration
-from youspotube.executor import Execution
+from youspotube.configuration.configurator import Configuration
+from youspotube.execution.executor import Execution
 from youspotube.exceptions import ConfigurationError, ExecutionError
-from youspotube.http import HttpUtil
+from youspotube.util.http import HttpUtil
 
 class Bootstrap:
     def __init__(self):

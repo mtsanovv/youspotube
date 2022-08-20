@@ -1,3 +1,3 @@
-from youspotube.bootstrapper import Bootstrap
+from youspotube.util.bootstrapper import Bootstrap
 
 Bootstrap()
