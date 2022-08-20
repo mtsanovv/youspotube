@@ -1,7 +1,4 @@
-from distutils.log import error
 import unittest
-from unittest import mock
-from unittest.mock import call
 
 from youspotube.exceptions import BaseYouspotubeError, ConfigurationError, ExecutionError
 import youspotube.constants as constants

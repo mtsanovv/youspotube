@@ -3,8 +3,8 @@ from unittest import mock
 
 @mock.patch("youspotube.util.bootstrapper.Bootstrap")
 class YsptbTest(unittest.TestCase):
-    def test_bootstrap_youspotube(self, bootstrap_mock):
-        import src.ysptb
+    def test_ysptb_call_bootstrap(self, bootstrap_mock):
+        import ysptb
         bootstrap_mock.assert_called_once()
 
 

@@ -4,7 +4,7 @@ from youspotube.configuration.param_collector import CfgFileParameterCollector, 
 
 class Configuration:
     def __init__(self):
-        self.is_help = 0
+        self.is_help = False
         self.params = {
             constants.ORIGIN_PARAMETER: '',
             constants.YT_TOKEN_PARAMETER: '',
@@ -17,7 +17,7 @@ class Configuration:
     def collect_parameters(self):
         argv_parser = ArgvParser()
         if argv_parser.is_help():
-            self.is_help = 1
+            self.is_help = True
             return
         param_collector = CollectorFactory._create_collector(self.params, argv_parser.should_use_cfg_file())
         param_collector.collect()

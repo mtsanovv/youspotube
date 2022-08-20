@@ -1,4 +1,3 @@
-from ast import arg
 import unittest
 from unittest import mock
 
@@ -81,8 +80,10 @@ class ArgvParserTest(unittest.TestCase):
             constants.YT_PLAYLISTS_PARAMETER: [],
             constants.SPOTIFY_PLAYLISTS_PARAMETER: []
         }
+
         with self.assertRaises(ConfigurationError) as config_error:
             argv_parser.collect_cmd_line_params(params)
+
         self.assertEqual(str(config_error.exception), "Configuration error: Command line arguments should be an even number - are you missing a Spotify or a YouTube playlist ID?")
         self.assertEqual(params, expected_params)
 
@@ -104,7 +105,9 @@ class ArgvParserTest(unittest.TestCase):
             constants.YT_PLAYLISTS_PARAMETER: ['playlist1', 'playlist3'],
             constants.SPOTIFY_PLAYLISTS_PARAMETER: ['playlist2', 'playlist4']
         }
+
         argv_parser.collect_cmd_line_params(params)
+
         self.assertEqual(params, expected_params)
 
 
