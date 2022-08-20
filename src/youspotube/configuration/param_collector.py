@@ -1,14 +1,12 @@
-from youspotube.configuration.argv import ArgvParser
 from youspotube.util.yaml_parser import YamlParser
 from youspotube.exceptions import ConfigurationError
 import youspotube.constants as constants
 
-class BaseParameterCollector:
+class CfgFileParameterCollector:
     def __init__(self, params):
         self.params = params
 
 
-class CfgFileParameterCollector(BaseParameterCollector):
     def collect(self):
         parsed_cfg_file = YamlParser.parse_config()
         self._validate_keys(parsed_cfg_file)
@@ -42,9 +40,3 @@ class CfgFileParameterCollector(BaseParameterCollector):
     def _copy_cfg_values(self, cfg):
         for param in self.params:
             self.params[param] = cfg[param]
-
-
-class CmdLineParameterCollector(BaseParameterCollector):
-    def collect(self):
-        argv_parser = ArgvParser()
-        argv_parser.collect_cmd_line_params(self.params)

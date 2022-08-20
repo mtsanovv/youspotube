@@ -14,7 +14,7 @@ class Bootstrap:
             e.print_exception()
             sys.exit(e.get_exit_code())
 
-        executor = Execution(config)
+        executor = Execution(config.get_params())
         try:
             executor.execute()
         except ExecutionError as e:
