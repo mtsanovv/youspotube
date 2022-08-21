@@ -1,5 +1,6 @@
 origin: ""
 yt_token: ""
-spotify_token: ""
-youtube_playlists: []
-spotify_playlists: []
+spotify_client_id: ""
+spotify_client_secret: ""
+playlists: {}
+tied_songs: {}

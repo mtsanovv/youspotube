@@ -2,6 +2,7 @@ import yaml
 import youspotube.constants as constants
 from youspotube.exceptions import ConfigurationError
 
+
 class YamlParser:
     def parse_config():
         try:
@@ -11,7 +12,7 @@ class YamlParser:
         with cfg_file:
             try:
                 cfg = yaml.safe_load(cfg_file)
-                if not type(cfg) is dict:
+                if type(cfg) is not dict:
                     raise ConfigurationError("Content of %s should be a dictionary" % constants.CONFIG_FILE_NAME)
                 return cfg
             except yaml.YAMLError as ymlerr:

@@ -1,3 +1,6 @@
+google-api-python-client==2.57.0
 pyinstaller==5.3
 PyYAML==6.0
 requests==2.28.1
+spotipy==2.20.0
+coverage==6.4.4

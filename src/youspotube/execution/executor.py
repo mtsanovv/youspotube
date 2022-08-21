@@ -1,9 +1,6 @@
-import youspotube.constants as constants
-
 class Execution:
-    def __init__(self, params):
-        self.params = params
-
+    def __init__(self, config):
+        self.config = config
 
     def execute(self):
         pass
