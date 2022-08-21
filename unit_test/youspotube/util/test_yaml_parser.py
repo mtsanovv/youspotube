@@ -24,7 +24,7 @@ class YamlParserTest(unittest.TestCase):
 
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch('builtins.open')
-    def test_YamlParser_raise_error_if_type_of_file_is_not_a_dict(self, open_mock, safe_load_mock):
+    def test_YamlParser_raise_error_if_contents_of_file_is_not_a_dict(self, open_mock, safe_load_mock):
         safe_load_mock.return_value = []
 
         with self.assertRaises(ConfigurationError) as expected_error:
