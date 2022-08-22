@@ -3,7 +3,7 @@ name: Release youspotube binaries
 on:
   release:
     types:
-      - created
+      - published
 
 jobs:
   release_linux:
@@ -57,7 +57,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   release_mac:
-    runs-on: windows-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         python-version: ["3.10"]
