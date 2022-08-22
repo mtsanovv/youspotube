@@ -44,9 +44,6 @@ jobs:
             echo "Code coverage is required to be above than ${required_percentage}%, currently it is ${coverage_percentage}%"
             exit 1
           fi
-      - name: Build executable with pyinstaller
-        run: |
-          python -m PyInstaller -F --distpath ./dist/linux --paths ./src ./src/ysptb.py
 
   test_win:
     runs-on: windows-latest
@@ -63,7 +60,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pyinstaller
           pip install -r requirements.txt
       - name: Test with unittest
         run: |
@@ -84,7 +80,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pyinstaller
           pip install -r requirements.txt
       - name: Test with unittest
         run: |
