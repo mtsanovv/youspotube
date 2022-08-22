@@ -19,7 +19,7 @@ class Spotify:
         # _init_connection should have been called in order to be able to use this property
         auth_manager = self.spotify.auth_manager
         token_info = auth_manager.cache_handler.get_cached_token()
-        if auth_manager.is_token_expired(token_info):
+        if token_info is not None and auth_manager.is_token_expired(token_info):
             self._init_connection()
         return self.spotify
 
