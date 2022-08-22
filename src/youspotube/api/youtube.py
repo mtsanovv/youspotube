@@ -11,7 +11,7 @@ class YouTube:
             raise ConfigurationError("Test connection to YouTube API failed: %s" % str(e))
 
     def _init_connection(self, api_key):
-        self.connection = build('youtube', 'v3', developerKey=api_key)
+        self.connection = build('youtube', 'v3', developerKey=api_key, static_discovery=False)
 
     def _test_connection(self):
         request = self.connection.channels().list(
