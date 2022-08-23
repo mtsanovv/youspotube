@@ -15,7 +15,7 @@ class BootstrapTest(unittest.TestCase):
     def test_Bootstrap_creation_error_raised_bad_configuration(self, config_mock, httputil_mock,
                                                                execution_mock, print_exception_mock):
         expected_error = ConfigurationError('nyamame vruzka s teb sega')
-        config_mock.return_value.connect_apis.side_effect = Mock(side_effect=expected_error)
+        config_mock.return_value.collect_parameters.side_effect = Mock(side_effect=expected_error)
 
         with self.assertRaises(SystemExit) as sys_exit:
             Bootstrap()
@@ -23,7 +23,8 @@ class BootstrapTest(unittest.TestCase):
         config_mock.assert_called_once()
         httputil_mock.check_connectivity.assert_called_once()
         config_mock.return_value.collect_parameters.assert_called_once()
-        config_mock.return_value.connect_apis.assert_called_once()
+        config_mock.return_value.connect_apis.assert_not_called()
+        config_mock.return_value.validate_parameters.assert_not_called()
         print_exception_mock.assert_called_once()
         expected_error.get_exit_code.assert_called_once()
         self.assertEqual(sys_exit.exception.code, 3)
@@ -45,6 +46,7 @@ class BootstrapTest(unittest.TestCase):
         httputil_mock.check_connectivity.assert_called_once()
         config_mock.return_value.collect_parameters.assert_called_once()
         config_mock.return_value.connect_apis.assert_called_once()
+        config_mock.return_value.validate_parameters.assert_called_once()
         execution_mock.assert_called_once_with(config_mock.return_value)
         execution_mock.return_value.execute.assert_called_once()
         print_exception_mock.assert_called_once()
@@ -62,6 +64,7 @@ class BootstrapTest(unittest.TestCase):
         httputil_mock.check_connectivity.assert_called_once()
         config_mock.return_value.collect_parameters.assert_called_once()
         config_mock.return_value.connect_apis.assert_called_once()
+        config_mock.return_value.validate_parameters.assert_called_once()
         execution_mock.assert_called_once_with(config_mock.return_value)
         execution_mock.return_value.execute.assert_called_once()
         sys_mock.exit.assert_not_called()

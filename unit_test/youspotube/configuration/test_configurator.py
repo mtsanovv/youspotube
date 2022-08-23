@@ -28,6 +28,13 @@ class ConfigurationTest(unittest.TestCase):
         cfg_file_param_collector_mock.assert_called_once_with(self.params)
         cfg_file_param_collector_mock.return_value.collect.assert_called_once()
 
+    @mock.patch('youspotube.configuration.configurator.ParameterValidator')
+    def test_Configuration_validate_parameters(self, validator_mock):
+        self.configuration.validate_parameters()
+
+        validator_mock.assert_called_once_with(self.params)
+        validator_mock.return_value.check_params.assert_called_once()
+
     @mock.patch('youspotube.configuration.configurator.YouTube')
     @mock.patch('youspotube.configuration.configurator.Spotify')
     def test_Configuration_connect_apis(self, spotify_mock, youtube_mock):

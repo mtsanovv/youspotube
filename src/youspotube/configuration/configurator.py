@@ -1,5 +1,6 @@
 from youspotube.api.spotify import Spotify
 from youspotube.api.youtube import YouTube
+from youspotube.configuration.param_validator import ParameterValidator
 import youspotube.constants as constants
 from youspotube.configuration.param_collector import CfgFileParameterCollector
 
@@ -18,6 +19,10 @@ class Configuration:
     def collect_parameters(self):
         param_collector = CfgFileParameterCollector(self.params)
         param_collector.collect()
+
+    def validate_parameters(self):
+        param_validator = ParameterValidator(self.params)
+        param_validator.check_params()
 
     def connect_apis(self):
         self.spotify_connection = Spotify(
