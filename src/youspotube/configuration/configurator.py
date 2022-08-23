@@ -34,7 +34,7 @@ class Configuration:
     def get_params(self):
         return self.params
 
-    def get_spotify_conenction(self):
+    def get_spotify_connection(self):
         return self.spotify_connection
 
     def get_youtube_connection(self):

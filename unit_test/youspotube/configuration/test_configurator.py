@@ -58,7 +58,7 @@ class ConfigurationTest(unittest.TestCase):
     def test_Configuration_get_spotify_connection(self):
         spotify_connection = Mock()
         self.configuration.spotify_connection = spotify_connection
-        self.assertIs(self.configuration.get_spotify_conenction(), spotify_connection)
+        self.assertIs(self.configuration.get_spotify_connection(), spotify_connection)
 
     def test_Configuration_get_youtube_connection(self):
         youtube_connection = Mock()
