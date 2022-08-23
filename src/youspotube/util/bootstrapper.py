@@ -30,7 +30,7 @@ class Bootstrap:
             e.print_exception()
             sys.exit(e.get_exit_code())
 
-    def configure_logging(self):   
+    def configure_logging(self):
         log_filename = constants.LOG_FILE % "{:%Y_%m_%d_%H_%M_%S}".format(datetime.now())
         log_dir = os.path.join(os.getcwd(), constants.LOGS_DIR)
         log_path = os.path.join(log_dir, log_filename)
