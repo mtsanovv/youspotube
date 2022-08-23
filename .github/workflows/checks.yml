@@ -29,10 +29,11 @@ jobs:
           pip install -r requirements.txt
       - name: Lint with flake8
         run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          # check for syntax errors/undefined names
+          flake8 . --select=E9,F63,F7,F82 --show-source
+          # check for PEP-8 compliance
+          # while PEP-8 requires maximum of 79 characters, the GitHub editor is 127 chars wide so we'll stick to that
+          flake8 . --max-complexity=10 --max-line-length=127
       - name: Test with unittest and collect test coverage
         run: |
           python -m coverage run --source=./src -m unittest -v

@@ -12,6 +12,7 @@ class Bootstrap:
             HttpUtil.check_connectivity()
             config.collect_parameters()
             config.connect_apis()
+            config.validate_parameters()
         except ConfigurationError as e:
             e.print_exception()
             sys.exit(e.get_exit_code())

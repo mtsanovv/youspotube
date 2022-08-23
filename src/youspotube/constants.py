@@ -1,5 +1,9 @@
 CONFIG_FILE_NAME = 'config.yml'
 
+CHECK_PARAM_METHOD_PREFIX = 'check_'
+ORIGINS = ['youtube', 'spotify', 'both']
+REQUIRED_KEYS_PLAYLISTS_SONGS = ['youtube', 'spotify']
+
 ORIGIN_PARAMETER = 'origin'
 YT_TOKEN_PARAMETER = 'yt_token'
 SPOTIFY_CLIENT_ID_PARAMETER = 'spotify_client_id'
