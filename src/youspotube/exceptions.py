@@ -1,3 +1,4 @@
+import logging
 import youspotube.constants as constants
 
 
@@ -10,7 +11,7 @@ class BaseYouspotubeError(Exception):
         return "%s error: %s" % (type, self.message)
 
     def print_exception(self):
-        print(str(self))
+        logging.critical(str(self))
 
     def get_exit_code(self):
         return self.exit_code

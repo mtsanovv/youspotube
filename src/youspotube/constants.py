@@ -1,5 +1,9 @@
 CONFIG_FILE_NAME = 'config.yml'
 
+LOGGER_FORMAT = "[%(asctime)s] [%(levelname)s] %(message)s"
+LOGS_DIR = 'logs'
+LOG_FILE = "ysptb_%s.log"
+
 CHECK_PARAM_METHOD_PREFIX = 'check_'
 ORIGINS = ['youtube', 'spotify', 'both']
 REQUIRED_KEYS_PLAYLISTS_SONGS = ['youtube', 'spotify']

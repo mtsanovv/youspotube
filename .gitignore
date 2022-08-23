@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 config.yml
-
 .DS_Store
+/logs
