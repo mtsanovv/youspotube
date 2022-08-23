@@ -1,6 +1,5 @@
 import unittest
 from unittest import mock
-from unittest.mock import call
 
 from youspotube.configuration.param_validator import ParameterValidator
 import youspotube.constants as constants
@@ -37,7 +36,13 @@ class ParameterValidatorTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             self.validator.check_origin(bad_origin)
 
-        self.assertEquals(str(expected_error.exception), "Configuration error: Unknown origin set in the configuration file: '%s'. Use one of the following: %s" % (bad_origin, ', '.join(constants.ORIGINS)))
+        self.assertEquals(
+            str(expected_error.exception),
+            "Configuration error: Unknown origin set in the configuration file: '%s'. Use one of the following: %s" % (
+                bad_origin,
+                ', '.join(constants.ORIGINS)
+            )
+        )
 
     def test_ParameterValidator_no_error_with_accepted_origin(self):
         self.validator.check_origin(constants.ORIGINS[0])
@@ -53,7 +58,13 @@ class ParameterValidatorTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             self.validator.check_song_playlist_keys(playlist, playlist_name, dict_type)
 
-        self.assertEqual(str(expected_error.exception), "Configuration error: Required field 'youtube' of %s '%s' is not a string in the configuration file" %(dict_type, playlist_name))
+        self.assertEqual(
+            str(expected_error.exception),
+            "Configuration error: Required field 'youtube' of %s '%s' is not a string in the configuration file" % (
+                dict_type,
+                playlist_name
+            )
+        )
 
     def test_ParameterValidator_raise_error_on_playlist_that_contains_no_value_for_a_required_field(self):
         dict_type = 'playlist'
@@ -66,8 +77,13 @@ class ParameterValidatorTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             self.validator.check_song_playlist_keys(playlist, playlist_name, dict_type)
 
-        self.assertEqual(str(expected_error.exception), "Configuration error: There's no value for the required field 'spotify' of %s '%s' in the configuration file" %(dict_type, playlist_name))
-
+        self.assertEqual(
+            str(expected_error.exception),
+            "Configuration error: There's no value for the required field 'spotify' of %s '%s' in the configuration file" % (
+                dict_type,
+                playlist_name
+            )
+        )
 
     def test_ParameterValidator_no_error_on_playlist_that_contains_acceptable_values(self):
         dict_type = 'playlist'
@@ -89,11 +105,14 @@ class ParameterValidatorTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             self.validator.check_song_playlist(playlists, dict_type)
 
-        self.assertEqual(str(expected_error.exception), "Configuration error: Playlist 'Chalga' is not a dictionary in the configuration file")
+        self.assertEqual(
+            str(expected_error.exception),
+            "Configuration error: Playlist 'Chalga' is not a dictionary in the configuration file"
+        )
         check_song_playlist_keys_mock.assert_not_called()
 
     @mock.patch.object(ParameterValidator, 'check_song_playlist_keys')
-    def test_ParameterValidator_raise_error_if_tied_song_does_not_contain_a_required_field(self, check_song_playlist_keys_mock):
+    def test_ParameterValidator_raise_error_if_required_field_not_in_tied_song(self, check_song_playlist_keys_mock):
         dict_type = 'tied song'
         playlists = {
             'Chalga': {
@@ -104,7 +123,10 @@ class ParameterValidatorTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             self.validator.check_song_playlist(playlists, dict_type)
 
-        self.assertEqual(str(expected_error.exception), "Configuration error: Tied song 'Chalga' does not contain the required field 'spotify' in the configuration file")
+        self.assertEqual(
+            str(expected_error.exception),
+            "Configuration error: Tied song 'Chalga' does not contain the required field 'spotify' in the configuration file"
+        )
         check_song_playlist_keys_mock.assert_not_called()
 
     @mock.patch.object(ParameterValidator, 'check_song_playlist_keys')

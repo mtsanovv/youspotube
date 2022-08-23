@@ -1,4 +1,3 @@
-from tabnanny import check
 import youspotube.constants as constants
 from youspotube.exceptions import ConfigurationError
 
@@ -15,24 +14,51 @@ class ParameterValidator:
 
     def check_origin(self, origin):
         if origin not in constants.ORIGINS:
-            raise ConfigurationError("Unknown origin set in the configuration file: '%s'. Use one of the following: %s" % (origin, ', '.join(constants.ORIGINS)))
+            raise ConfigurationError(
+                "Unknown origin set in the configuration file: '%s'. Use one of the following: %s" % (
+                    origin,
+                    ', '.join(constants.ORIGINS)
+                )
+            )
 
     def check_song_playlist_keys(self, dict, dict_name, dict_type):
         for required_key in constants.REQUIRED_KEYS_PLAYLISTS_SONGS:
             if type(dict[required_key]) is not str:
-                raise ConfigurationError("Required field '%s' of %s '%s' is not a string in the configuration file" % (required_key, dict_type, dict_name))
+                raise ConfigurationError(
+                    "Required field '%s' of %s '%s' is not a string in the configuration file" % (
+                        required_key,
+                        dict_type, dict_name
+                    )
+                )
             if not dict[required_key]:
-                raise ConfigurationError("There's no value for the required field '%s' of %s '%s' in the configuration file" % (required_key, dict_type, dict_name))
+                raise ConfigurationError(
+                    "There's no value for the required field '%s' of %s '%s' in the configuration file" % (
+                        required_key,
+                        dict_type,
+                        dict_name
+                    )
+                )
 
     def check_song_playlist(self, dictionary, dict_type):
         dict_type_capitalized = dict_type.capitalize()
         for key_name in dictionary:
             nested_dict = dictionary[key_name]
             if type(nested_dict) is not dict:
-                raise ConfigurationError("%s '%s' is not a dictionary in the configuration file" % (dict_type_capitalized, key_name))
+                raise ConfigurationError(
+                    "%s '%s' is not a dictionary in the configuration file" % (
+                        dict_type_capitalized,
+                        key_name
+                    )
+                )
             for required_field in constants.REQUIRED_KEYS_PLAYLISTS_SONGS:
                 if required_field not in nested_dict:
-                    raise ConfigurationError("%s '%s' does not contain the required field '%s' in the configuration file" % (dict_type_capitalized, key_name, required_field))
+                    raise ConfigurationError(
+                        "%s '%s' does not contain the required field '%s' in the configuration file" % (
+                            dict_type_capitalized,
+                            key_name,
+                            required_field
+                        )
+                    )
             self.check_song_playlist_keys(nested_dict, key_name, dict_type)
 
     def check_playlists(self, playlists):
