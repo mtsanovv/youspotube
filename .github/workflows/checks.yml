@@ -42,9 +42,10 @@ jobs:
           coverage_percentage=$(python -m coverage report | awk '$1 == "TOTAL" {print $NF+0}')
           required_percentage=80
           if [ ${coverage_percentage} -lt ${required_percentage} ]; then 
-            echo "Code coverage is required to be above than ${required_percentage}%, currently it is ${coverage_percentage}%"
+            echo "Code coverage is required to be above ${required_percentage}%, currently it is ${coverage_percentage}%"
             exit 1
           fi
+          echo "Code coverage ${coverage_percentage}% meets the requirement of ${required_percentage}%"
 
   test_win:
     runs-on: windows-latest
