@@ -131,3 +131,4 @@ dmypy.json
 config.yml
 .DS_Store
 /logs
+.youtube_cache

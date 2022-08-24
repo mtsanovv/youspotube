@@ -35,3 +35,25 @@ class Spotify:
 
     def _test_connection(self):
         self.connection.me()
+
+    def parse_playlist(self, playlist_details):
+        id = playlist_details[constants.ORIGIN_SPOTIFY]
+        all_tracks = self.connection.playlist(id, 'tracks(items(track(name,id,duration_ms,artists(name))))')
+        # output is something like this:
+        # {'tracks': {'items': [{'track': {'artists': [{'name': 'Nedeljko Bajic Baja'}], 'id': '2S1o6wsyfgSK1uvGv91Knz', 'name': 'Zapisano je u vremenu'}}]}}
+        tracks = all_tracks['tracks']['items']
+        playlist = {}
+        for item in tracks:
+            track = item['track']
+            track_id = track['id']
+            track_name = track['name']
+            track_duration_ms = track['duration_ms']
+            artists = []
+            for artist in track['artists']:
+                artists.append(artist['name'])
+            playlist[track_id] = {
+                'name': track_name,
+                'artists': artists,
+                'duration_ms': track_duration_ms
+            }
+        return playlist

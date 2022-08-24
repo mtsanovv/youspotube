@@ -25,9 +25,11 @@ NO_DATA_EXCEPTION_PARAMETERS = [TIED_SONGS_PARAMETER]
 SPOTIFY_API_URL = 'https://api.spotify.com/v1/'
 SPOTIFY_CALLBACK_URL = 'http://localhost:4466'
 SPOTIFY_SCOPE = 'user-read-private playlist-modify-public playlist-read-private playlist-modify-private'
-SPOTIFY_CACHE_FILE = '.cache'
 
 YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/'
+MAX_YOUTUBE_SPOTIFY_DURATION_DELTA_SECONDS = 15
+YOUTUBE_SPOTIFY_DURATION_DELTA_DATA_KEY = 'spotify_youtube_length_difference'
+YOUTUBE_VIDEO_ID_DATA_KEY = 'video_id'
 
 CONFIGURATION_ERROR_TYPE = 'Configuration'
 EXECUTION_ERROR_TYPE = 'Execution'
