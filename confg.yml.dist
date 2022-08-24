@@ -1,5 +1,6 @@
 origin: ""
-yt_token: ""
+youtube_client_id: ""
+youtube_client_secret: ""
 spotify_client_id: ""
 spotify_client_secret: ""
 playlists: {}

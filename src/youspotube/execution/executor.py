@@ -37,6 +37,7 @@ class Execution:
             logging.info("Synchronizing playlist '%s' from the configuration file" % playlist_name)
             try:
                 getattr(self, sync_method)(self.playlists[playlist_name])
+                logging.info("Finished ynchronizing playlist '%s' from the configuration file" % playlist_name)
             except Exception as e:
                 logging.warning(
                     "An error has occurred while syncing the '%s' playlist: %s" % (
@@ -44,13 +45,10 @@ class Execution:
                         str(e)
                     )
                 )
-                logging.info("Continuing with next playlist...")
 
     def sync_from_spotify(self, playlist_details):
         spotify_playlist = self.spotify.parse_playlist(playlist_details)
         video_ids = self.youtube.spotify_playlist_to_video_ids(spotify_playlist)
-        # reverse video_ids because the youtube batch request will add the newest at the top
-        # video_ids.reverse()
         self.youtube.add_videos_to_playlist(playlist_details, video_ids)
 
     def sync_from_youtube(self, playlist_details):

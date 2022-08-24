@@ -10,7 +10,8 @@ class ConfigurationTest(unittest.TestCase):
     def setUp(self):
         self.params = {
             constants.ORIGIN_PARAMETER: '',
-            constants.YT_TOKEN_PARAMETER: '',
+            constants.YOUTUBE_CLIENT_ID_PARAMETER: '',
+            constants.YOUTUBE_CLIENT_SECRET_PARAMETER: '',
             constants.SPOTIFY_CLIENT_ID_PARAMETER: '',
             constants.SPOTIFY_CLIENT_SECRET_PARAMETER: '',
             constants.PLAYLISTS_PARAMETER: {},
@@ -40,15 +41,17 @@ class ConfigurationTest(unittest.TestCase):
     def test_Configuration_connect_apis(self, spotify_mock, youtube_mock):
         expected_spotify_client_id = 'aa'
         expected_spotify_secret = 'bb'
-        expected_youtube_token = 'cc'
+        expected_youtube_client_id = 'cc'
+        expected_youtube_client_secret = 'dd'
         self.configuration.params[constants.SPOTIFY_CLIENT_ID_PARAMETER] = expected_spotify_client_id
         self.configuration.params[constants.SPOTIFY_CLIENT_SECRET_PARAMETER] = expected_spotify_secret
-        self.configuration.params[constants.YT_TOKEN_PARAMETER] = expected_youtube_token
+        self.configuration.params[constants.YOUTUBE_CLIENT_ID_PARAMETER] = expected_youtube_client_id
+        self.configuration.params[constants.YOUTUBE_CLIENT_SECRET_PARAMETER] = expected_youtube_client_secret
 
         self.configuration.connect_apis()
 
         spotify_mock.assert_called_once_with(expected_spotify_client_id, expected_spotify_secret)
-        youtube_mock.assert_called_once_with(expected_youtube_token)
+        youtube_mock.assert_called_once_with(expected_youtube_client_id, expected_youtube_client_secret)
         self.assertIs(self.configuration.spotify_connection, spotify_mock.return_value)
         self.assertIs(self.configuration.youtube_connection, youtube_mock.return_value)
 

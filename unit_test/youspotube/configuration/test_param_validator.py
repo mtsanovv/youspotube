@@ -10,7 +10,7 @@ class ParameterValidatorTest(unittest.TestCase):
     def setUp(self):
         self.params = {
             constants.ORIGIN_PARAMETER: 'aa',
-            constants.YT_TOKEN_PARAMETER: 'cc',
+            constants.YOUTUBE_CLIENT_ID_PARAMETER: 'cc',
             constants.SPOTIFY_CLIENT_ID_PARAMETER: 'bb',
             constants.SPOTIFY_CLIENT_SECRET_PARAMETER: 'dd',
             constants.PLAYLISTS_PARAMETER: {},
