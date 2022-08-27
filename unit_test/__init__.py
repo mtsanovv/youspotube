@@ -5,3 +5,7 @@ import sys
 PROJECT_PATH = os.getcwd()
 SOURCE_PATH = os.path.join(PROJECT_PATH, 'src')
 sys.path.append(SOURCE_PATH)
+
+import youspotube.constants as constants
+
+os.environ[constants.ENVIRONMENT_VAR_UNIT_TESTING] = '1'

@@ -36,7 +36,7 @@ class ParameterValidatorTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             self.validator.check_origin(bad_origin)
 
-        self.assertEquals(
+        self.assertEqual(
             str(expected_error.exception),
             "Configuration error: Unknown origin set in the configuration file: '%s'. Use one of the following: %s" % (
                 bad_origin,
