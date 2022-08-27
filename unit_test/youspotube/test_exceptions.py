@@ -23,14 +23,14 @@ class BaseYouspotubeErrorTest(unittest.TestCase):
         self.assertEqual(self.error.__str__(self.type), expected_message)
 
     @mock.patch.object(BaseYouspotubeError, '__str__')
-    @mock.patch('builtins.print')
-    def test_BaseYouspotubeError_print_exception(self, print_mock, str_mock):
+    @mock.patch('youspotube.exceptions.logging')
+    def test_BaseYouspotubeError_print_exception(self, logging_mock, str_mock):
         expected_message = 'exc'
         str_mock.side_effect = Mock(return_value=expected_message)
 
         self.error.print_exception()
 
-        print_mock.assert_called_once_with(expected_message)
+        logging_mock.critical.assert_called_once_with(expected_message)
 
     def test_get_exit_code_of_BaseYouspotubeError(self):
         self.assertEqual(self.error.get_exit_code(), self.exit_code)

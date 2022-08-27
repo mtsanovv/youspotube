@@ -10,7 +10,7 @@ class CfgFileParameterCollectorTest(unittest.TestCase):
     def setUp(self):
         self.params = {
             constants.ORIGIN_PARAMETER: '',
-            constants.YT_TOKEN_PARAMETER: '',
+            constants.YOUTUBE_CLIENT_ID_PARAMETER: '',
             constants.SPOTIFY_CLIENT_ID_PARAMETER: '',
             constants.SPOTIFY_CLIENT_SECRET_PARAMETER: '',
             constants.PLAYLISTS_PARAMETER: {},
@@ -34,7 +34,7 @@ class CfgFileParameterCollectorTest(unittest.TestCase):
 
     def test_CfgFileParameterCollector_cfg_validation_raise_error_when_required_param_is_missing_in_cfg_file(self):
         cfg_file_params = {
-            constants.YT_TOKEN_PARAMETER: '',
+            constants.YOUTUBE_CLIENT_ID_PARAMETER: '',
             constants.SPOTIFY_CLIENT_ID_PARAMETER: '',
             constants.SPOTIFY_CLIENT_SECRET_PARAMETER: '',
             constants.PLAYLISTS_PARAMETER: {},
@@ -53,7 +53,7 @@ class CfgFileParameterCollectorTest(unittest.TestCase):
     def test_CfgFileParameterCollector_cfg_validation__raise_error_when_required_param_is_of_different_type_in_cfg_file(self):
         cfg_file_params = {
             constants.ORIGIN_PARAMETER: 'aa',
-            constants.YT_TOKEN_PARAMETER: 'dd',
+            constants.YOUTUBE_CLIENT_ID_PARAMETER: 'dd',
             constants.SPOTIFY_CLIENT_ID_PARAMETER: 'bb',
             constants.SPOTIFY_CLIENT_SECRET_PARAMETER: 'cc',
             constants.PLAYLISTS_PARAMETER: [],
@@ -76,7 +76,7 @@ class CfgFileParameterCollectorTest(unittest.TestCase):
     def test_CfgFileParameterCollector_cfg_validation_raise_error_when_required_param_has_no_value_in_cfg_file(self):
         cfg_file_params = {
             constants.ORIGIN_PARAMETER: '',
-            constants.YT_TOKEN_PARAMETER: '',
+            constants.YOUTUBE_CLIENT_ID_PARAMETER: '',
             constants.SPOTIFY_CLIENT_ID_PARAMETER: '',
             constants.SPOTIFY_CLIENT_SECRET_PARAMETER: '',
             constants.PLAYLISTS_PARAMETER: {},
@@ -95,7 +95,7 @@ class CfgFileParameterCollectorTest(unittest.TestCase):
     def test_CfgFileParameterCollector_copy_cfg_values(self):
         cfg_file_params = {
             constants.ORIGIN_PARAMETER: 'aa',
-            constants.YT_TOKEN_PARAMETER: 'dd',
+            constants.YOUTUBE_CLIENT_ID_PARAMETER: 'dd',
             constants.SPOTIFY_CLIENT_ID_PARAMETER: 'bb',
             constants.SPOTIFY_CLIENT_SECRET_PARAMETER: 'cc',
             constants.PLAYLISTS_PARAMETER: {'gg'},

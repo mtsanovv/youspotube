@@ -5,9 +5,10 @@ import youspotube.constants as constants
 
 
 class Spotify:
-    def __init__(self, client_id, client_secret):
+    def __init__(self, client_id, client_secret, tied_songs):
         self.client_id = client_id
         self.client_secret = client_secret
+        self.tied_songs = tied_songs
         try:
             self._init_connection()
             self._test_connection()
@@ -35,3 +36,24 @@ class Spotify:
 
     def _test_connection(self):
         self.connection.me()
+
+    def parse_playlist(self, playlist_details):
+        playlist_id = playlist_details[constants.ORIGIN_SPOTIFY]
+        all_tracks = self.connection.playlist(playlist_id, 'tracks(items(track(name,id,duration_ms,artists(name))))')
+        tracks = all_tracks['tracks']['items']
+        playlist = {}
+
+        for item in tracks:
+            track = item['track']
+            track_id = track['id']
+            track_name = track['name']
+            track_duration_ms = track['duration_ms']
+            artists = []
+            for artist in track['artists']:
+                artists.append(artist['name'])
+            playlist[track_id] = {
+                'name': track_name,
+                'artists': artists,
+                'duration_ms': track_duration_ms
+            }
+        return playlist

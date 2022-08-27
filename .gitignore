@@ -129,5 +129,6 @@ dmypy.json
 .pyre/
 
 config.yml
-
 .DS_Store
+/logs
+.youtube_cache

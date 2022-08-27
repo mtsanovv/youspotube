@@ -10,7 +10,7 @@ class ParameterValidatorTest(unittest.TestCase):
     def setUp(self):
         self.params = {
             constants.ORIGIN_PARAMETER: 'aa',
-            constants.YT_TOKEN_PARAMETER: 'cc',
+            constants.YOUTUBE_CLIENT_ID_PARAMETER: 'cc',
             constants.SPOTIFY_CLIENT_ID_PARAMETER: 'bb',
             constants.SPOTIFY_CLIENT_SECRET_PARAMETER: 'dd',
             constants.PLAYLISTS_PARAMETER: {},
@@ -36,7 +36,7 @@ class ParameterValidatorTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             self.validator.check_origin(bad_origin)
 
-        self.assertEquals(
+        self.assertEqual(
             str(expected_error.exception),
             "Configuration error: Unknown origin set in the configuration file: '%s'. Use one of the following: %s" % (
                 bad_origin,
@@ -50,8 +50,8 @@ class ParameterValidatorTest(unittest.TestCase):
     def test_ParameterValidator_raise_error_on_playlist_that_contains_required_field_that_is_not_a_string(self):
         dict_type = 'tied song'
         playlist = {
-            'youtube': 1,
-            'spotify': 'aa'
+            constants.ORIGIN_YOUTUBE: 1,
+            constants.ORIGIN_SPOTIFY: 'aa'
         }
         playlist_name = 'Favorite Music'
 
@@ -60,7 +60,8 @@ class ParameterValidatorTest(unittest.TestCase):
 
         self.assertEqual(
             str(expected_error.exception),
-            "Configuration error: Required field 'youtube' of %s '%s' is not a string in the configuration file" % (
+            "Configuration error: Required field '%s' of %s '%s' is not a string in the configuration file" % (
+                constants.ORIGIN_YOUTUBE,
                 dict_type,
                 playlist_name
             )
@@ -69,8 +70,8 @@ class ParameterValidatorTest(unittest.TestCase):
     def test_ParameterValidator_raise_error_on_playlist_that_contains_no_value_for_a_required_field(self):
         dict_type = 'playlist'
         playlist = {
-            'youtube': 'bb',
-            'spotify': ''
+            constants.ORIGIN_YOUTUBE: 'bb',
+            constants.ORIGIN_SPOTIFY: ''
         }
         playlist_name = 'Favorite Music'
 
@@ -79,7 +80,8 @@ class ParameterValidatorTest(unittest.TestCase):
 
         self.assertEqual(
             str(expected_error.exception),
-            "Configuration error: There's no value for the required field 'spotify' of %s '%s' in the configuration file" % (
+            "Configuration error: There's no value for the required field '%s' of %s '%s' in the configuration file" % (
+                constants.ORIGIN_SPOTIFY,
                 dict_type,
                 playlist_name
             )
@@ -88,8 +90,8 @@ class ParameterValidatorTest(unittest.TestCase):
     def test_ParameterValidator_no_error_on_playlist_that_contains_acceptable_values(self):
         dict_type = 'playlist'
         playlist = {
-            'youtube': 'bb',
-            'spotify': 'cc'
+            constants.ORIGIN_YOUTUBE: 'bb',
+            constants.ORIGIN_SPOTIFY: 'cc'
         }
         playlist_name = 'Favorite Music'
 
@@ -116,7 +118,7 @@ class ParameterValidatorTest(unittest.TestCase):
         dict_type = 'tied song'
         playlists = {
             'Chalga': {
-                'youtube': 'something'
+                constants.ORIGIN_YOUTUBE: 'something'
             }
         }
 
@@ -125,7 +127,9 @@ class ParameterValidatorTest(unittest.TestCase):
 
         self.assertEqual(
             str(expected_error.exception),
-            "Configuration error: Tied song 'Chalga' does not contain the required field 'spotify' in the configuration file"
+            "Configuration error: Tied song 'Chalga' does not contain the required field '%s' in the configuration file" % (
+                constants.ORIGIN_SPOTIFY
+            )
         )
         check_song_playlist_keys_mock.assert_not_called()
 
@@ -134,8 +138,8 @@ class ParameterValidatorTest(unittest.TestCase):
         dict_type = 'playlist'
         nested_playlist_name = 'Chalga'
         nested_playlist = {
-            'youtube': 'bb',
-            'spotify': 'cc'
+            constants.ORIGIN_YOUTUBE: 'bb',
+            constants.ORIGIN_SPOTIFY: 'cc'
         }
         playlists = {
             nested_playlist_name: nested_playlist
@@ -163,8 +167,8 @@ class ParameterValidatorTest(unittest.TestCase):
     def test_ParameterValidator_check_tied_songs(self, check_song_playlist_mock):
         tied_songs = {
             'DesiSlava - Toxic': {
-                'youtube': 'aa',
-                'spotify': 'bb'
+                constants.ORIGIN_YOUTUBE: 'aa',
+                constants.ORIGIN_SPOTIFY: 'bb'
             }
         }
 
