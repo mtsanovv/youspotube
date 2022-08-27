@@ -50,8 +50,8 @@ class ConfigurationTest(unittest.TestCase):
 
         self.configuration.connect_apis()
 
-        spotify_mock.assert_called_once_with(expected_spotify_client_id, expected_spotify_secret)
-        youtube_mock.assert_called_once_with(expected_youtube_client_id, expected_youtube_client_secret)
+        spotify_mock.assert_called_once_with(expected_spotify_client_id, expected_spotify_secret, {})
+        youtube_mock.assert_called_once_with(expected_youtube_client_id, expected_youtube_client_secret, {})
         self.assertIs(self.configuration.spotify_connection, spotify_mock.return_value)
         self.assertIs(self.configuration.youtube_connection, youtube_mock.return_value)
 
