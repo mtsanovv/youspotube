@@ -1,6 +1,7 @@
 CONFIG_FILE_NAME = 'config.yml'
 
-LOGGER_FORMAT = "[%(asctime)s] [%(levelname)s] %(message)s"
+LOGGER_LOG_FILE_FORMAT = "[%(asctime)s] [%(levelname)s] %(message)s"
+LOGGER_LOG_STOUD_FORMAT = "%(message)s"
 LOGS_DIR = 'logs'
 LOG_FILE = "ysptb_%s.log"
 
@@ -33,8 +34,11 @@ YOUTUBE_SCOPE = 'https://www.googleapis.com/auth/youtube'
 MAX_YOUTUBE_SPOTIFY_DURATION_DELTA_SECONDS = 15
 YOUTUBE_SPOTIFY_DURATION_DELTA_DATA_KEY = 'spotify_youtube_length_difference'
 YOUTUBE_VIDEO_ID_DATA_KEY = 'video_id'
+SEARCH_RESULTS_KEY = 'search_results'
+TRACK_POSITION_KEY = 'track_position'
 INITIAL_SEARCH_LIMIT = 3
 EXTENDED_SEARCH_LIMIT = 7
+SLEEP_BETWEEN_YOUTUBE_PLAYLIST_PUSHES = 3
 
 CONFIGURATION_ERROR_TYPE = 'Configuration'
 EXECUTION_ERROR_TYPE = 'Execution'

@@ -28,11 +28,13 @@ class Configuration:
     def connect_apis(self):
         self.spotify_connection = Spotify(
             self.params[constants.SPOTIFY_CLIENT_ID_PARAMETER],
-            self.params[constants.SPOTIFY_CLIENT_SECRET_PARAMETER]
+            self.params[constants.SPOTIFY_CLIENT_SECRET_PARAMETER],
+            self.params[constants.TIED_SONGS_PARAMETER]
         )
         self.youtube_connection = YouTube(
             self.params[constants.YOUTUBE_CLIENT_ID_PARAMETER],
-            self.params[constants.YOUTUBE_CLIENT_SECRET_PARAMETER]
+            self.params[constants.YOUTUBE_CLIENT_SECRET_PARAMETER],
+            self.params[constants.TIED_SONGS_PARAMETER]
         )
 
     def get_params(self):

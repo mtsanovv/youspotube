@@ -13,7 +13,7 @@ class Execution:
         self.youtube = self.config.get_youtube_connection()
 
     def execute(self):
-        logging.info("Syncing playlists: %s" % self.get_sync_arrow())
+        logging.info("Synchronizing playlists: %s" % self.get_sync_arrow())
         self.sync_playlists()
 
     def get_sync_arrow(self):
@@ -35,12 +35,13 @@ class Execution:
 
         for playlist_name in self.playlists:
             logging.info("Synchronizing playlist '%s' from the configuration file" % playlist_name)
+
             try:
                 getattr(self, sync_method)(self.playlists[playlist_name])
-                logging.info("Finished ynchronizing playlist '%s' from the configuration file" % playlist_name)
+                logging.info("Finished synchronizing playlist '%s' from the configuration file" % playlist_name)
             except Exception as e:
                 logging.warning(
-                    "An error has occurred while syncing the '%s' playlist: %s" % (
+                    "An error has occurred while synchronizing the '%s' playlist: %s" % (
                         playlist_name,
                         str(e)
                     )
@@ -49,7 +50,19 @@ class Execution:
     def sync_from_spotify(self, playlist_details):
         spotify_playlist = self.spotify.parse_playlist(playlist_details)
         video_ids = self.youtube.spotify_playlist_to_video_ids(spotify_playlist)
-        self.youtube.add_videos_to_playlist(playlist_details, video_ids)
+
+        logging.info("Found %s/%s Spotify tracks on YouTube" % (len(video_ids), len(spotify_playlist)))
+
+        needed_video_ids = self.youtube.get_missing_videos_in_playlist(playlist_details, video_ids)
+
+        videos_to_push_count = len(needed_video_ids)
+        if not videos_to_push_count:
+            logging.info("Nothing to push to YouTube playlist")
+            return
+
+        logging.info("Pushing %s videos to YouTube playlist that are not in it" % videos_to_push_count)
+
+        self.youtube.add_videos_to_playlist(playlist_details, needed_video_ids)
 
     def sync_from_youtube(self, playlist_details):
         pass
