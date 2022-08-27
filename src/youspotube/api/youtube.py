@@ -6,7 +6,7 @@ from googleapiclient.errors import HttpError
 from oauth2client import tools, file
 from googleapiclient.discovery import build
 from youspotube.exceptions import ConfigurationError
-from youtubesearchpython import *
+from youtubesearchpython import CustomSearch, VideoSortOrder
 import youspotube.constants as constants
 from youspotube.util.tools import Tools
 
@@ -99,7 +99,12 @@ class YouTube:
             return self._lookup_spotify_track_on_youtube(track, track_id, constants.EXTENDED_SEARCH_LIMIT)
 
         if not videos:
-            logging.warning("Could not find a relevant video even in the top %s YouTube search results for: %s, song cannot be synchronized" % (constants.EXTENDED_SEARCH_LIMIT, track_beautiful))
+            logging.warning(
+                "Could not find a relevant video in the top %s YouTube search results for: %s, song cannot be synchronized" % (
+                    constants.EXTENDED_SEARCH_LIMIT,
+                    track_beautiful
+                )
+            )
             return None, videos_result
 
         videos.sort(key=lambda x: x[constants.YOUTUBE_SPOTIFY_DURATION_DELTA_DATA_KEY])
@@ -176,7 +181,11 @@ class YouTube:
                         # in case of a connection error, retry
                         retried_once = True
                         continue
-                    logging.warning("An error has occurred while pushing video ID '%s' to YouTube playlist '%s'" % (video_id, playlist_id))
+                    logging.warning(
+                        "An error has occurred while pushing video ID '%s' to YouTube playlist '%s'" % (
+                            video_id, playlist_id
+                        )
+                    )
                     logging.debug(
                         "An error has occurred while pushing video ID '%s' to YouTube playlist '%s': %s" % (
                             video_id,
