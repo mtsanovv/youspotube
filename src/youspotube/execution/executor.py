@@ -65,8 +65,23 @@ class Execution:
         self.youtube.add_videos_to_playlist(playlist_details, needed_video_ids)
 
     def sync_from_youtube(self, playlist_details):
-        pass
+        youtube_playlist = self.youtube.parse_playlist(playlist_details)
+        track_ids = self.spotify.youtube_playlist_to_track_ids(youtube_playlist)
+        relevant_track_ids = self.youtube.get_relevant_spotify_tracks(track_ids)
+
+        logging.info("Found %s/%s YouTube songs on Spotify" % (len(relevant_track_ids), len(youtube_playlist)))
+
+        needed_track_ids = self.spotify.get_missing_tracks_in_playlist(playlist_details, relevant_track_ids)
+
+        tracks_to_push_count = len(needed_track_ids)
+        if not tracks_to_push_count:
+            logging.info("Nothing to push to Spotify playlist")
+            return
+
+        logging.info("Pushing %s tracks to Spotify playlist that are not in it" % tracks_to_push_count)
+
+        self.spotify.add_tracks_to_playlist(playlist_details, needed_track_ids)
 
     def sync_from_both(self, playlist_details):
-        self.sync_from_spotify()
-        self.sync_from_youtube()
+        self.sync_from_spotify(playlist_details)
+        self.sync_from_youtube(playlist_details)

@@ -27,18 +27,23 @@ NO_DATA_EXCEPTION_PARAMETERS = [TIED_SONGS_PARAMETER]
 SPOTIFY_API_URL = 'https://api.spotify.com/v1/'
 SPOTIFY_CALLBACK_URL = 'http://localhost:4466'
 SPOTIFY_SCOPE = 'user-read-private playlist-modify-public playlist-read-private playlist-modify-private'
+SPOTIFY_TRACK_ID_DATA_KEY = 'track_id'
+SPOTIFY_TRACK_TITLE_ARTISTS_DATA_KEY = 'track_title_artists'
+SPOTIFY_SEARCH_LIMIT = 5
 
 YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/'
 YOUTUBE_TOKEN_STORAGE_FILE = '.youtube_cache'
 YOUTUBE_SCOPE = 'https://www.googleapis.com/auth/youtube'
+YOUTUBE_SEARCH_LIMIT = 20
 MAX_YOUTUBE_SPOTIFY_DURATION_DELTA_SECONDS = 15
 YOUTUBE_SPOTIFY_DURATION_DELTA_DATA_KEY = 'spotify_youtube_length_difference'
 YOUTUBE_VIDEO_ID_DATA_KEY = 'video_id'
-SEARCH_RESULTS_KEY = 'search_results'
-TRACK_POSITION_KEY = 'track_position'
+SEARCH_RESULTS_DATA_KEY = 'search_results'
+TRACK_POSITION_DATA_KEY = 'track_position'
+YOUTUBE_VIDEO_TITLE_DATA_KEY = 'video_title'
 INITIAL_SEARCH_LIMIT = 2
 EXTENDED_SEARCH_LIMIT = 7
-SLEEP_BETWEEN_YOUTUBE_PLAYLIST_PUSHES = 3
+SLEEP_BETWEEN_PLAYLIST_PUSHES = 3
 
 CONFIGURATION_ERROR_TYPE = 'Configuration'
 EXECUTION_ERROR_TYPE = 'Execution'

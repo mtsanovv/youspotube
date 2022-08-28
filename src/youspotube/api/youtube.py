@@ -53,15 +53,15 @@ class YouTube:
         for track_id in spotify_playlist:
             track = spotify_playlist[track_id]
 
-            video_id, similar_results = self._lookup_spotify_track_on_youtube(track, track_id)
+            video_id, search_results = self._lookup_spotify_track_on_youtube(track, track_id)
 
             if video_id is None:
                 continue
 
             video_ids.append({
                 constants.YOUTUBE_VIDEO_ID_DATA_KEY: video_id,
-                constants.SEARCH_RESULTS_KEY: similar_results,
-                constants.TRACK_POSITION_KEY: track_position
+                constants.SEARCH_RESULTS_DATA_KEY: search_results,
+                constants.TRACK_POSITION_DATA_KEY: track_position
             })
 
             track_position += 1
@@ -87,7 +87,11 @@ class YouTube:
 
         logging.debug("YouTube search query: %s" % track_lookup_string)
 
-        videos_result = CustomSearch(track_lookup_string, VideoSortOrder.relevance).result()['result']
+        videos_result = CustomSearch(
+            track_lookup_string,
+            VideoSortOrder.relevance,
+            constants.YOUTUBE_SEARCH_LIMIT
+        ).result()['result']
         videos = self._get_relevant_videos_from_search_result(track_duration_s, videos_result, search_limit)
 
         # in order to produce more accurate results, choose the video that has the smallest duration delta compared to the Spotify # noqa: E501
@@ -152,19 +156,19 @@ class YouTube:
         playlist_id = playlist_details[constants.ORIGIN_YOUTUBE]
 
         for video_data in videos:
-            playlist_length = len(self.get_playlist_items(playlist_id))
+            playlist_length = len(self._get_playlist_items(playlist_id))
             video_id = video_data[constants.YOUTUBE_VIDEO_ID_DATA_KEY]
             request_body = {
                 "snippet": {
                     "playlistId": playlist_id,
-                    "position": video_data[constants.TRACK_POSITION_KEY],
+                    "position": video_data[constants.TRACK_POSITION_DATA_KEY],
                     "resourceId": {
                         "kind": "youtube#video",
                         "videoId": video_id
                     }
                 }
             }
-            if video_data[constants.TRACK_POSITION_KEY] > playlist_length - 1:
+            if video_data[constants.TRACK_POSITION_DATA_KEY] > playlist_length - 1:
                 # remove the position property when it is not in the playlist range
                 # that's done in order to prevent invalid arguments due to invalid positions
                 request_body['snippet'].pop('position')
@@ -180,7 +184,7 @@ class YouTube:
             retried_once = False
             while True:
                 try:
-                    time.sleep(constants.SLEEP_BETWEEN_YOUTUBE_PLAYLIST_PUSHES)
+                    time.sleep(constants.SLEEP_BETWEEN_PLAYLIST_PUSHES)
                     response = request.execute()
                     break
                 except HttpError as httperr:
@@ -210,7 +214,7 @@ class YouTube:
 
     def get_missing_videos_in_playlist(self, playlist_details, all_videos):
         playlist_id = playlist_details[constants.ORIGIN_YOUTUBE]
-        playlist_items = self.get_playlist_items(playlist_id)
+        playlist_items = self._get_playlist_items(playlist_id)
 
         all_missing_videos = []
 
@@ -229,7 +233,7 @@ class YouTube:
 
         return actual_missing_video_ids
 
-    def get_playlist_items(self, playlist_id):
+    def _get_playlist_items(self, playlist_id):
         desired_parts = 'snippet,contentDetails'
         max_results = 50
 
@@ -264,7 +268,7 @@ class YouTube:
         actually_missing_videos = []
 
         for video_data in all_missing_videos:
-            search_results = video_data[constants.SEARCH_RESULTS_KEY]
+            search_results = video_data[constants.SEARCH_RESULTS_DATA_KEY]
             # a video without search_results is a tied video
             # since they're manually entered by the user no search results will be accurate
             if search_results is not None:
@@ -296,3 +300,53 @@ class YouTube:
             video_titles.append(video_data['snippet']['title'])
 
         return video_titles
+
+    def parse_playlist(self, playlist_details):
+        playlist_id = playlist_details[constants.ORIGIN_YOUTUBE]
+        playlist_items = self._get_playlist_items(playlist_id)
+
+        playlist = {}
+
+        for video_data in playlist_items:
+            video_id = video_data['contentDetails']['videoId']
+            video_title = video_data['snippet']['title']
+            playlist[video_id] = {
+                'title': video_title
+            }
+
+        return playlist
+
+    def get_relevant_spotify_tracks(self, all_tracks):
+        relevant_tracks = []
+
+        for track in all_tracks:
+            track_query = track[constants.SPOTIFY_TRACK_TITLE_ARTISTS_DATA_KEY]
+            origin_video_id = track[constants.YOUTUBE_VIDEO_ID_DATA_KEY]
+
+            if track_query is None:
+                # a track without a YouTube search query is a tied track
+                # since they're manually entered by the user no search results will be accurate
+                relevant_tracks.append(track)
+                continue
+
+            video_results = CustomSearch(
+                track_query,
+                VideoSortOrder.relevance,
+                constants.YOUTUBE_SEARCH_LIMIT
+            ).result()['result']
+
+            origin_video_found = False
+            for video_data in video_results:
+                video_id = video_data['id']
+                if video_id == origin_video_id:
+                    relevant_tracks.append(track)
+                    origin_video_found = True
+                    break
+
+            if not origin_video_found:
+                logging.warning("Could not find a relevant track on Spotify for: %s, song cannot be synchronized" % (
+                        track[constants.YOUTUBE_VIDEO_TITLE_DATA_KEY]
+                    )
+                )
+
+        return relevant_tracks
