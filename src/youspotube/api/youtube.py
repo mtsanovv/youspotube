@@ -77,6 +77,12 @@ class YouTube:
 
         tied_video_id_to_track_id = self._get_tied_video_id_to_track_id(track_id)
         if tied_video_id_to_track_id is not None:
+            logging.info(
+                "Using tied video ID '%s' to track '%s' instead of looking it up on YouTube" % (
+                    tied_video_id_to_track_id,
+                    track_beautiful
+                )
+            )
             return tied_video_id_to_track_id, None
 
         logging.debug("YouTube search query: %s" % track_lookup_string)
@@ -135,7 +141,8 @@ class YouTube:
         return relevant_videos
 
     def _get_tied_video_id_to_track_id(self, track_id):
-        for tie in self.tied_songs:
+        for tie_name in self.tied_songs:
+            tie = self.tied_songs[tie_name]
             if track_id == tie[constants.ORIGIN_SPOTIFY]:
                 return tie[constants.ORIGIN_YOUTUBE]
 
