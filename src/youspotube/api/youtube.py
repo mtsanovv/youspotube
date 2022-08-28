@@ -77,7 +77,7 @@ class YouTube:
 
         tied_video_id_to_track_id = self._get_tied_video_id_to_track_id(track_id)
         if tied_video_id_to_track_id is not None:
-            logging.info(
+            logging.debug(
                 "Using tied video ID '%s' to track '%s' instead of looking it up on YouTube" % (
                     tied_video_id_to_track_id,
                     track_beautiful
@@ -150,9 +150,9 @@ class YouTube:
 
     def add_videos_to_playlist(self, playlist_details, videos):
         playlist_id = playlist_details[constants.ORIGIN_YOUTUBE]
-        is_playlist_empty = not len(self.get_playlist_items(playlist_id)) > 0
 
         for video_data in videos:
+            playlist_length = len(self.get_playlist_items(playlist_id))
             video_id = video_data[constants.YOUTUBE_VIDEO_ID_DATA_KEY]
             request_body = {
                 "snippet": {
@@ -164,8 +164,8 @@ class YouTube:
                     }
                 }
             }
-            if is_playlist_empty:
-                # remove the position property when populating playlists for the first time
+            if video_data[constants.TRACK_POSITION_KEY] > playlist_length - 1:
+                # remove the position property when it is not in the playlist range
                 # that's done in order to prevent invalid arguments due to invalid positions
                 request_body['snippet'].pop('position')
 
