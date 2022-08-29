@@ -90,7 +90,7 @@ class YouTube:
         videos_result = CustomSearch(
             track_lookup_string,
             VideoSortOrder.relevance,
-            constants.YOUTUBE_SEARCH_LIMIT
+            search_limit
         ).result()['result']
         videos = self._get_relevant_videos_from_search_result(track_duration_s, videos_result, search_limit)
 
