@@ -18,8 +18,8 @@ class Execution:
 
     def get_sync_arrow(self):
         origin = self.params[constants.ORIGIN_PARAMETER]
-        arrow_sides = ["YouTube", "Spotify"]
-        if origin == constants.ORIGIN_SPOTIFY:
+        arrow_sides = ["Spotify", "YouTube"]
+        if origin == constants.ORIGIN_YOUTUBE:
             arrow_sides.reverse()
 
         arrow = '-' * 10 + '> '
