@@ -29,7 +29,7 @@ SPOTIFY_CALLBACK_URL = 'http://localhost:4466'
 SPOTIFY_SCOPE = 'user-read-private playlist-modify-public playlist-read-private playlist-modify-private'
 SPOTIFY_TRACK_ID_DATA_KEY = 'track_id'
 SPOTIFY_TRACK_TITLE_ARTISTS_DATA_KEY = 'track_title_artists'
-SPOTIFY_SEARCH_LIMIT = 5
+SPOTIFY_SEARCH_LIMIT = 1
 
 YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/'
 YOUTUBE_TOKEN_STORAGE_FILE = '.youtube_cache'
