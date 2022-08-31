@@ -132,3 +132,7 @@ config.yml
 .DS_Store
 /logs
 .youtube_cache
+
+ysptb_linux
+ysptb_mac
+ysptb_win.exe
