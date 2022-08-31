@@ -13,18 +13,16 @@ class Execution:
         self.youtube = self.config.get_youtube_connection()
 
     def execute(self):
-        logging.info("Synchronizing playlists: %s" % self.get_sync_arrow())
+        logging.info("Synchronizing playlists: %s" % self.get_sync_direction())
         self.sync_playlists()
 
-    def get_sync_arrow(self):
+    def get_sync_direction(self):
         origin = self.params[constants.ORIGIN_PARAMETER]
         arrow_sides = ["Spotify", "YouTube"]
         if origin == constants.ORIGIN_YOUTUBE:
             arrow_sides.reverse()
 
         arrow = '-' * 10 + '> '
-        if origin == constants.ORIGIN_BOTH:
-            return (' <' + arrow).join(arrow_sides)
         return (' ' + arrow).join(arrow_sides)
 
     def sync_playlists(self):
@@ -81,7 +79,3 @@ class Execution:
         logging.info("Pushing %s tracks to Spotify playlist that are not in it" % tracks_to_push_count)
 
         self.spotify.add_tracks_to_playlist(playlist_details, needed_track_ids)
-
-    def sync_from_both(self, playlist_details):
-        self.sync_from_spotify(playlist_details)
-        self.sync_from_youtube(playlist_details)

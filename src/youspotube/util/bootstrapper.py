@@ -33,7 +33,7 @@ class Bootstrap:
 
     def configure_logging(self):
         stdout_handler = logging.StreamHandler(sys.stdout)
-        stdout_handler.setFormatter(logging.Formatter(constants.LOGGER_LOG_STOUD_FORMAT))
+        stdout_handler.setFormatter(logging.Formatter(constants.LOGGER_LOG_STDOUT_FORMAT))
         stdout_handler.setLevel(logging.INFO)
 
         handlers = [stdout_handler]
