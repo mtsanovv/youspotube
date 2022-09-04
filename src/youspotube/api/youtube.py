@@ -1,10 +1,11 @@
 import logging
 import time
-import httplib2
-import oauth2client
+import os
+import pickle
 from googleapiclient.errors import HttpError
-from oauth2client import tools, file
 from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 from youspotube.exceptions import ConfigurationError
 from youtubesearchpython import CustomSearch, VideoSortOrder
 import youspotube.constants as constants
@@ -23,20 +24,30 @@ class YouTube:
             raise ConfigurationError("Test connection to YouTube API failed: %s" % str(e))
 
     def _init_connection(self):
-        storage = file.Storage(constants.YOUTUBE_TOKEN_STORAGE_FILE)
-        credentials = storage.get()
-
-        if credentials is None or credentials.invalid:
-            flow = oauth2client.client.OAuth2WebServerFlow(
-                client_id=self.client_id,
-                client_secret=self.client_secret,
-                scope=constants.YOUTUBE_SCOPE
+        if not os.path.exists(constants.YOUTUBE_TOKEN_STORAGE_FILE):
+            flow = InstalledAppFlow.from_client_config(
+                client_config={
+                   "installed": {
+                        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                        "token_uri": "https://accounts.google.com/o/oauth2/token",
+                        "client_id": self.client_id,
+                        "client_secret": self.client_secret
+                    }
+                },
+                scopes=[constants.YOUTUBE_SCOPE]
             )
-            credentials = tools.run_flow(flow, storage)
-        http = httplib2.Http()
-        http = credentials.authorize(http)
+            credentials = flow.run_local_server(port=4467)
 
-        self.connection = build('youtube', 'v3', http=http, static_discovery=False, cache_discovery=False)
+            with open(constants.YOUTUBE_TOKEN_STORAGE_FILE, 'wb') as credentials_file:
+                pickle.dump(credentials, credentials_file)
+        else:
+            with open(constants.YOUTUBE_TOKEN_STORAGE_FILE, 'rb') as credentials_file:
+                credentials = pickle.load(credentials_file)
+
+        if credentials.expired:
+            credentials.refresh(Request())
+
+        self.connection = build('youtube', 'v3', credentials=credentials, static_discovery=False, cache_discovery=False)
 
     def _test_connection(self):
         request = self.connection.channels().list(
