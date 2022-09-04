@@ -398,9 +398,9 @@ class SpotifyTest(unittest.TestCase):
             constants.SPOTIFY_TRACK_ID_DATA_KEY: track_id,
             constants.TRACK_POSITION_DATA_KEY: 0
         }]
-        expected_message = "Pushing track '%s' to Spotify playlist '%s'" % ( 
-            track_id, 
-            playlist_id 
+        expected_message = "Pushing track '%s' to Spotify playlist '%s'" % (
+            track_id,
+            playlist_id
         )
         self.spotify_mock._get_playlist_items.return_value = []
 
@@ -423,9 +423,9 @@ class SpotifyTest(unittest.TestCase):
             constants.SPOTIFY_TRACK_ID_DATA_KEY: track_id,
             constants.TRACK_POSITION_DATA_KEY: 0
         }]
-        expected_message = "Pushing track '%s' to Spotify playlist '%s'" % ( 
-            track_id, 
-            playlist_id 
+        expected_message = "Pushing track '%s' to Spotify playlist '%s'" % (
+            track_id,
+            playlist_id
         )
         self.spotify_mock._get_playlist_items.return_value = ['dummy']
 
