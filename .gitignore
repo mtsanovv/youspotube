@@ -131,6 +131,7 @@ dmypy.json
 config.yml
 .DS_Store
 /logs
+.spotify_cache
 .youtube_cache
 
 ysptb_linux

@@ -24,7 +24,8 @@ class YouTube:
             raise ConfigurationError("Test connection to YouTube API failed: %s" % str(e))
 
     def _init_connection(self):
-        if not os.path.exists(constants.YOUTUBE_TOKEN_STORAGE_FILE):
+        token_storage_file_path = Tools.get_filepath_relative_to_ysptb(constants.YOUTUBE_TOKEN_STORAGE_FILE)
+        if not os.path.exists(token_storage_file_path):
             flow = InstalledAppFlow.from_client_config(
                 client_config={
                    "installed": {
@@ -38,10 +39,10 @@ class YouTube:
             )
             credentials = flow.run_local_server(port=4467)
 
-            with open(constants.YOUTUBE_TOKEN_STORAGE_FILE, 'wb') as credentials_file:
+            with open(token_storage_file_path, 'wb') as credentials_file:
                 pickle.dump(credentials, credentials_file)
         else:
-            with open(constants.YOUTUBE_TOKEN_STORAGE_FILE, 'rb') as credentials_file:
+            with open(token_storage_file_path, 'rb') as credentials_file:
                 credentials = pickle.load(credentials_file)
 
         if credentials.expired:

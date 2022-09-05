@@ -28,12 +28,15 @@ class Spotify:
         return self.spotify
 
     def _init_connection(self):
+        cache_path = Tools.get_filepath_relative_to_ysptb(constants.SPOTIFY_TOKEN_STORAGE_FILE)
+
         self.spotify = spotipy.Spotify(
             auth_manager=SpotifyOAuth(
                 scope=constants.SPOTIFY_SCOPE,
                 redirect_uri=constants.SPOTIFY_CALLBACK_URL,
                 client_id=self.client_id,
-                client_secret=self.client_secret
+                client_secret=self.client_secret,
+                cache_path=cache_path
             )
         )
 

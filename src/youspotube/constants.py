@@ -29,6 +29,7 @@ SPOTIFY_SCOPE = 'user-read-private playlist-modify-public playlist-read-private 
 SPOTIFY_TRACK_ID_DATA_KEY = 'track_id'
 SPOTIFY_TRACK_TITLE_ARTISTS_DATA_KEY = 'track_title_artists'
 SPOTIFY_SEARCH_LIMIT = 1
+SPOTIFY_TOKEN_STORAGE_FILE = '.spotify_cache'
 
 YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/'
 YOUTUBE_TOKEN_STORAGE_FILE = '.youtube_cache'

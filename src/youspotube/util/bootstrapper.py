@@ -9,6 +9,7 @@ from youspotube.execution.executor import Execution
 from youspotube.exceptions import ConfigurationError, ExecutionError
 from youspotube.util.http import HttpUtil
 import youspotube.constants as constants
+from youspotube.util.tools import Tools
 
 
 class Bootstrap:
@@ -40,7 +41,7 @@ class Bootstrap:
 
         if not self._is_in_unit_test_mode():
             log_filename = constants.LOG_FILE % "{:%Y_%m_%d_%H_%M_%S}".format(datetime.now())
-            log_dir = os.path.join(os.getcwd(), constants.LOGS_DIR)
+            log_dir = os.path.join(Tools.getcwd(), constants.LOGS_DIR)
             self.log_path = os.path.join(log_dir, log_filename)
 
             os.makedirs(constants.LOGS_DIR, exist_ok=True)
