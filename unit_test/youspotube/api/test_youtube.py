@@ -404,7 +404,12 @@ class YouTubeTest(unittest.TestCase):
             constants.YOUTUBE_VIDEO_ID_DATA_KEY: expected_video_id_in_result
         }]
 
-        return_value = YouTube._get_relevant_videos_from_search_result(self.youtube_mock, 300, search_result, len(search_result))
+        return_value = YouTube._get_relevant_videos_from_search_result(
+            self.youtube_mock,
+            300,
+            search_result,
+            len(search_result)
+        )
 
         self.assertEqual(return_value, expected_relevant_videos)
 
