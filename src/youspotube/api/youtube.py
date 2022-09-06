@@ -1,42 +1,64 @@
 import logging
 import time
-import httplib2
-import oauth2client
+import os
+import pickle
 from googleapiclient.errors import HttpError
-from oauth2client import tools, file
 from googleapiclient.discovery import build
-from youspotube.exceptions import ConfigurationError
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from youspotube.api.base import BaseAPI
 from youtubesearchpython import CustomSearch, VideoSortOrder
 import youspotube.constants as constants
 from youspotube.util.tools import Tools
 
 
-class YouTube:
-    def __init__(self, client_id, client_secret, tied_songs):
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.tied_songs = tied_songs
-        try:
-            self._init_connection()
-            self._test_connection()
-        except Exception as e:
-            raise ConfigurationError("Test connection to YouTube API failed: %s" % str(e))
+class YouTube(BaseAPI):
+    @property
+    def connection(self):
+        # _init_connection should have been called in order to be able to use this property
+        credentials = self._get_credentials()
+        if credentials.expired:
+            self._init_connection(credentials)
+        return self.youtube
 
-    def _init_connection(self):
-        storage = file.Storage(constants.YOUTUBE_TOKEN_STORAGE_FILE)
-        credentials = storage.get()
+    def _init_connection(self, credentials=None):
+        if credentials is None:
+            credentials = self._get_credentials()
 
-        if credentials is None or credentials.invalid:
-            flow = oauth2client.client.OAuth2WebServerFlow(
-                client_id=self.client_id,
-                client_secret=self.client_secret,
-                scope=constants.YOUTUBE_SCOPE
+        if credentials.expired:
+            credentials.refresh(Request())
+            self._save_credentials(credentials)
+
+        self.youtube = build('youtube', 'v3', credentials=credentials, static_discovery=False, cache_discovery=False)
+
+    def _get_credentials(self):
+        token_storage_file_path = Tools.get_filepath_relative_to_ysptb(constants.YOUTUBE_TOKEN_STORAGE_FILE)
+
+        if not os.path.exists(token_storage_file_path):
+            flow = InstalledAppFlow.from_client_config(
+                client_config={
+                   "installed": {
+                        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                        "token_uri": "https://accounts.google.com/o/oauth2/token",
+                        "client_id": self.client_id,
+                        "client_secret": self.client_secret
+                    }
+                },
+                scopes=[constants.YOUTUBE_SCOPE]
             )
-            credentials = tools.run_flow(flow, storage)
-        http = httplib2.Http()
-        http = credentials.authorize(http)
+            credentials = flow.run_local_server(port=4467)
 
-        self.connection = build('youtube', 'v3', http=http, static_discovery=False, cache_discovery=False)
+            self._save_credentials(credentials)
+        else:
+            with open(token_storage_file_path, 'rb') as credentials_file:
+                credentials = pickle.load(credentials_file)
+
+        return credentials
+
+    def _save_credentials(self, credentials):
+        token_storage_file_path = Tools.get_filepath_relative_to_ysptb(constants.YOUTUBE_TOKEN_STORAGE_FILE)
+        with open(token_storage_file_path, 'wb') as credentials_file:
+            pickle.dump(credentials, credentials_file)
 
     def _test_connection(self):
         request = self.connection.channels().list(

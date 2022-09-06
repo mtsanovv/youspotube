@@ -4,6 +4,7 @@ from unittest import mock
 import yaml
 from youspotube.exceptions import ConfigurationError
 import youspotube.constants as constants
+from youspotube.util.tools import Tools
 from youspotube.util.yaml_parser import YamlParser
 
 
@@ -16,7 +17,7 @@ class YamlParserTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             YamlParser.parse_config()
 
-        open_mock.assert_called_once_with(constants.CONFIG_FILE_NAME, 'r')
+        open_mock.assert_called_once_with(Tools.get_filepath_relative_to_ysptb(constants.CONFIG_FILE_NAME), 'r')
         self.assertEqual(
             str(expected_error.exception),
             "Configuration error: Opening %s failed: %s" % (constants.CONFIG_FILE_NAME, error_message)
@@ -30,7 +31,7 @@ class YamlParserTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             YamlParser.parse_config()
 
-        open_mock.assert_called_once_with(constants.CONFIG_FILE_NAME, 'r')
+        open_mock.assert_called_once_with(Tools.get_filepath_relative_to_ysptb(constants.CONFIG_FILE_NAME), 'r')
         safe_load_mock.assert_called_once_with(open_mock.return_value)
         self.assertEqual(
             str(expected_error.exception),
@@ -46,7 +47,7 @@ class YamlParserTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError) as expected_error:
             YamlParser.parse_config()
 
-        open_mock.assert_called_once_with(constants.CONFIG_FILE_NAME, 'r')
+        open_mock.assert_called_once_with(Tools.get_filepath_relative_to_ysptb(constants.CONFIG_FILE_NAME), 'r')
         safe_load_mock.assert_called_once_with(open_mock.return_value)
         self.assertEqual(
             str(expected_error.exception),
@@ -59,6 +60,6 @@ class YamlParserTest(unittest.TestCase):
         safe_load_mock.return_value = {}
         parsed_config = YamlParser.parse_config()
 
-        open_mock.assert_called_once_with(constants.CONFIG_FILE_NAME, 'r')
+        open_mock.assert_called_once_with(Tools.get_filepath_relative_to_ysptb(constants.CONFIG_FILE_NAME), 'r')
         safe_load_mock.assert_called_once_with(open_mock.return_value)
         self.assertIs(parsed_config, safe_load_mock.return_value)

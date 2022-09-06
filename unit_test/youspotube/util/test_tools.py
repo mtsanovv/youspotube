@@ -1,6 +1,8 @@
 import unittest
+from unittest import mock
 
 from youspotube.util.tools import Tools
+import os
 
 
 class ToolsTest(unittest.TestCase):
@@ -39,3 +41,33 @@ class ToolsTest(unittest.TestCase):
         expected_track_string = "%s, %s - %s" % (artist1, artist2, title)
 
         self.assertEqual(Tools.get_track_string(title, [artist1, artist2], True), expected_track_string)
+
+    @mock.patch.object(Tools, 'getcwd')
+    def test_Tools_get_filepath_relative_to_ysptb(self, getcwd_mock):
+        getcwd_mock.return_value = os.getcwd()
+        filepath = os.path.join('path', 'to', 'file')
+        expected_fullpath = os.path.join(getcwd_mock.return_value, filepath)
+
+        return_value = Tools.get_filepath_relative_to_ysptb(filepath)
+
+        self.assertEqual(return_value, expected_fullpath)
+
+    @mock.patch('youspotube.util.tools.sys')
+    def test_Tools_getcwd_in_exe_bundle(self, sys_mock):
+        sys_mock.frozen = True
+        exe_path = os.path.join('.', 'ysptb')
+        sys_mock.argv = [exe_path]
+        expected_cwd = os.path.abspath(os.path.dirname(exe_path))
+
+        return_value = Tools.getcwd()
+
+        self.assertEqual(return_value, expected_cwd)
+
+    @mock.patch('youspotube.util.tools.sys')
+    def test_Tools_getcwd_in_python_script(self, sys_mock):
+        sys_mock.frozen = False
+        expected_cwd = os.getcwd()
+
+        return_value = Tools.getcwd()
+
+        self.assertEqual(return_value, expected_cwd)

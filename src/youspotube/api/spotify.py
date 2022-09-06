@@ -2,22 +2,12 @@ import logging
 import time
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from youspotube.exceptions import ConfigurationError
+from youspotube.api.base import BaseAPI
 import youspotube.constants as constants
 from youspotube.util.tools import Tools
 
 
-class Spotify:
-    def __init__(self, client_id, client_secret, tied_songs):
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.tied_songs = tied_songs
-        try:
-            self._init_connection()
-            self._test_connection()
-        except Exception as e:
-            raise ConfigurationError("Test connection to Spotify API failed: %s" % str(e))
-
+class Spotify(BaseAPI):
     @property
     def connection(self):
         # _init_connection should have been called in order to be able to use this property
@@ -28,12 +18,15 @@ class Spotify:
         return self.spotify
 
     def _init_connection(self):
+        cache_path = Tools.get_filepath_relative_to_ysptb(constants.SPOTIFY_TOKEN_STORAGE_FILE)
+
         self.spotify = spotipy.Spotify(
             auth_manager=SpotifyOAuth(
                 scope=constants.SPOTIFY_SCOPE,
                 redirect_uri=constants.SPOTIFY_CALLBACK_URL,
                 client_id=self.client_id,
-                client_secret=self.client_secret
+                client_secret=self.client_secret,
+                cache_path=cache_path
             )
         )
 
