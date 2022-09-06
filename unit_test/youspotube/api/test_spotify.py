@@ -3,7 +3,6 @@ from unittest import mock
 from unittest.mock import Mock
 
 from youspotube.api.spotify import Spotify
-from youspotube.exceptions import ConfigurationError
 import youspotube.constants as constants
 import os
 
@@ -11,37 +10,6 @@ import os
 class SpotifyTest(unittest.TestCase):
     def setUp(self):
         self.spotify_mock = Mock()
-
-    def test_Spotify_creation_no_error(self):
-        expected_client_id = 1
-        expected_client_secret = 2
-        expected_tied_songs = {}
-
-        Spotify.__init__(self.spotify_mock, expected_client_id, expected_client_secret, expected_tied_songs)
-
-        self.assertEqual(expected_client_id, self.spotify_mock.client_id)
-        self.assertEqual(expected_client_secret, self.spotify_mock.client_secret)
-        self.assertIs(expected_tied_songs, self.spotify_mock.tied_songs)
-        self.spotify_mock._init_connection.assert_called_once()
-        self.spotify_mock._test_connection.assert_called_once()
-
-    def test_Spotify_creation_error(self):
-        expected_client_id = 1
-        expected_client_secret = 2
-        expected_tied_songs = {}
-        error_reason = 'bad api'
-        expected_error_message = "Configuration error: Test connection to Spotify API failed: %s" % error_reason
-        self.spotify_mock._init_connection.side_effect = Exception(error_reason)
-
-        with self.assertRaises(ConfigurationError) as expected_error:
-            Spotify.__init__(self.spotify_mock, expected_client_id, expected_client_secret, expected_tied_songs)
-
-        self.assertEqual(expected_client_id, self.spotify_mock.client_id)
-        self.assertEqual(expected_client_secret, self.spotify_mock.client_secret)
-        self.assertIs(expected_tied_songs, self.spotify_mock.tied_songs)
-        self.assertEqual(str(expected_error.exception), expected_error_message)
-        self.spotify_mock._init_connection.assert_called_once()
-        self.spotify_mock._test_connection.assert_not_called()
 
     def test_Spotify_get_connection_without_init_connection(self):
         auth_manager = self.spotify_mock.spotify.auth_manager

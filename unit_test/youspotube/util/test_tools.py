@@ -3,7 +3,7 @@ from unittest import mock
 
 from youspotube.util.tools import Tools
 import os
-import sys
+
 
 class ToolsTest(unittest.TestCase):
     def test_Tools_convert_string_time_to_seconds(self):
