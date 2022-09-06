@@ -5,6 +5,7 @@ from unittest.mock import Mock
 from youspotube.api.spotify import Spotify
 from youspotube.exceptions import ConfigurationError
 import youspotube.constants as constants
+import os
 
 
 class SpotifyTest(unittest.TestCase):
@@ -63,11 +64,14 @@ class SpotifyTest(unittest.TestCase):
         self.spotify_mock._init_connection.assert_called_once()
         self.assertIs(return_value, self.spotify_mock.spotify)
 
+    @mock.patch('youspotube.api.spotify.Tools')
     @mock.patch('youspotube.api.spotify.SpotifyOAuth')
     @mock.patch('youspotube.api.spotify.spotipy')
-    def test_Spotify_init_connection(self, spotipy_mock, oauth_mock):
+    def test_Spotify_init_connection(self, spotipy_mock, oauth_mock, tools_mock):
         self.spotify_mock.client_id = 1
         self.spotify_mock.client_secret = 2
+        expected_cache_file_path = os.path.join('aa', 'bb', constants.SPOTIFY_TOKEN_STORAGE_FILE)
+        tools_mock.get_filepath_relative_to_ysptb.return_value = expected_cache_file_path
 
         Spotify._init_connection(self.spotify_mock)
 
@@ -77,7 +81,8 @@ class SpotifyTest(unittest.TestCase):
             scope=constants.SPOTIFY_SCOPE,
             redirect_uri=constants.SPOTIFY_CALLBACK_URL,
             client_id=1,
-            client_secret=2
+            client_secret=2,
+            cache_path=expected_cache_file_path
         )
 
     def test_Spotify_test_connection(self):
