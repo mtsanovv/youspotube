@@ -227,12 +227,13 @@ class YouTubeTest(unittest.TestCase):
         expected_track_id = '1'
         track_name = 'Test'
         track_artists = ['Tester', 'Testable']
+        track_duration_ms = 1000
         expected_track_beautiful = Tools.get_track_string(track_name, track_artists, True)
         expected_track_lookup_string = Tools.get_track_string(track_name, track_artists)
         track = {
             'name': track_name,
             'artists': track_artists,
-            'duration_ms': 1000,
+            'duration_ms': track_duration_ms,
         }
         msg1 = "YouTube search query: %s" % expected_track_lookup_string
         msg2 = "Could not find a relevant video in the top %s YouTube search results for: %s, checking the top %s results" % (
@@ -241,12 +242,15 @@ class YouTubeTest(unittest.TestCase):
             constants.EXTENDED_SEARCH_LIMIT
         )
         expected_debug_calls = [call(msg1), call(msg2)]
+        expected_search_results = []
+        expected_video_results = []
+        expected_video_id_result = None
         custom_search_mock.return_value.result.return_value = {
-            'result': []
+            'result': expected_search_results
         }
         self.youtube_mock._get_tied_video_id_to_track_id.return_value = None
-        self.youtube_mock._get_relevant_videos_from_search_result.return_value = []
-        self.youtube_mock._lookup_spotify_track_on_youtube.return_value = None, []
+        self.youtube_mock._get_relevant_videos_from_search_result.return_value = expected_video_results
+        self.youtube_mock._lookup_spotify_track_on_youtube.return_value = expected_video_id_result, expected_video_results
 
         return_value1, return_value2 = YouTube._lookup_spotify_track_on_youtube(
             self.youtube_mock,
@@ -261,8 +265,8 @@ class YouTubeTest(unittest.TestCase):
             constants.INITIAL_SEARCH_LIMIT
         )
         self.youtube_mock._get_relevant_videos_from_search_result.assert_called_once_with(
-            1,
-            [],
+            track_duration_ms // 1000,
+            expected_search_results,
             constants.INITIAL_SEARCH_LIMIT
         )
         logging_mock.debug.assert_has_calls(expected_debug_calls)
@@ -271,7 +275,7 @@ class YouTubeTest(unittest.TestCase):
             expected_track_id,
             constants.EXTENDED_SEARCH_LIMIT
         )
-        self.assertEqual([return_value1, return_value2], [None, []])
+        self.assertEqual([return_value1, return_value2], [expected_video_id_result, expected_video_results])
 
     @mock.patch('youspotube.api.youtube.CustomSearch')
     @mock.patch('youspotube.api.youtube.logging')
@@ -279,23 +283,27 @@ class YouTubeTest(unittest.TestCase):
         expected_track_id = '1'
         track_name = 'Test'
         track_artists = ['Tester', 'Testable']
+        track_duration_ms = 1000
         expected_track_beautiful = Tools.get_track_string(track_name, track_artists, True)
         expected_track_lookup_string = Tools.get_track_string(track_name, track_artists)
         track = {
             'name': track_name,
             'artists': track_artists,
-            'duration_ms': 1000,
+            'duration_ms': track_duration_ms,
         }
         msg1 = "YouTube search query: %s" % expected_track_lookup_string
         msg2 = "Could not find a relevant video in the top %s YouTube search results for: %s, song cannot be synchronized" % (
             constants.EXTENDED_SEARCH_LIMIT,
             expected_track_beautiful
         )
+        expected_search_results = []
+        expected_video_results = []
+        expected_video_id_result = None
         custom_search_mock.return_value.result.return_value = {
-            'result': []
+            'result': expected_search_results
         }
         self.youtube_mock._get_tied_video_id_to_track_id.return_value = None
-        self.youtube_mock._get_relevant_videos_from_search_result.return_value = []
+        self.youtube_mock._get_relevant_videos_from_search_result.return_value = expected_video_results
 
         return_value1, return_value2 = YouTube._lookup_spotify_track_on_youtube(
             self.youtube_mock,
@@ -311,11 +319,110 @@ class YouTubeTest(unittest.TestCase):
             constants.EXTENDED_SEARCH_LIMIT
         )
         self.youtube_mock._get_relevant_videos_from_search_result.assert_called_once_with(
-            1,
-            [],
+            track_duration_ms // 1000,
+            expected_search_results,
             constants.EXTENDED_SEARCH_LIMIT
         )
         logging_mock.debug.assert_called_once_with(msg1)
         logging_mock.warning.assert_called_once_with(msg2)
         self.youtube_mock._lookup_spotify_track_on_youtube.assert_not_called()
-        self.assertEqual([return_value1, return_value2], [None, []])
+        self.assertEqual([return_value1, return_value2], [expected_video_id_result, expected_video_results])
+
+    @mock.patch('youspotube.api.youtube.CustomSearch')
+    @mock.patch('youspotube.api.youtube.logging')
+    def test_YouTube_lookup_track_on_valid_results(self, logging_mock, custom_search_mock):
+        expected_track_id = '1'
+        track_name = 'Test'
+        track_artists = ['Tester', 'Testable']
+        track_duration_ms = 1000
+        expected_track_lookup_string = Tools.get_track_string(track_name, track_artists)
+        track = {
+            'name': track_name,
+            'artists': track_artists,
+            'duration_ms': track_duration_ms,
+        }
+        expected_message = "YouTube search query: %s" % expected_track_lookup_string
+        expected_result_video_id = '2'
+        expected_search_results = ['dummy', 'results']
+        custom_search_mock.return_value.result.return_value = {
+            'result': expected_search_results
+        }
+        self.youtube_mock._get_tied_video_id_to_track_id.return_value = None
+        self.youtube_mock._get_relevant_videos_from_search_result.return_value = [
+            {
+                constants.YOUTUBE_VIDEO_ID_DATA_KEY: '3',
+                constants.YOUTUBE_SPOTIFY_DURATION_DELTA_DATA_KEY: 20
+            },
+            {
+                constants.YOUTUBE_VIDEO_ID_DATA_KEY: expected_result_video_id,
+                constants.YOUTUBE_SPOTIFY_DURATION_DELTA_DATA_KEY: 10
+            }
+        ]
+
+        return_value1, return_value2 = YouTube._lookup_spotify_track_on_youtube(
+            self.youtube_mock,
+            track,
+            expected_track_id
+        )
+
+        self.youtube_mock._get_tied_video_id_to_track_id.assert_called_once_with(expected_track_id)
+        custom_search_mock.assert_called_once_with(
+            expected_track_lookup_string,
+            VideoSortOrder.relevance,
+            constants.INITIAL_SEARCH_LIMIT
+        )
+        self.youtube_mock._get_relevant_videos_from_search_result.assert_called_once_with(
+            track_duration_ms // 1000,
+            expected_search_results,
+            constants.INITIAL_SEARCH_LIMIT
+        )
+        logging_mock.debug.assert_called_once_with(expected_message)
+        self.youtube_mock._lookup_spotify_track_on_youtube.assert_not_called()
+        self.assertEqual([return_value1, return_value2], [expected_result_video_id, expected_search_results])
+
+    def test_YouTube_get_relevant_videos_from_search_result_search_limit_exceeded(self):
+        search_result = ['if', 'this', 'data', 'is', 'used', 'failure', 'is', 'expected']
+
+        return_value = YouTube._get_relevant_videos_from_search_result(self.youtube_mock, 30, search_result, 0)
+
+        self.assertEqual(return_value, [])
+
+    def test_YouTube_get_relevant_videos_from_search_resultd(self):
+        expected_video_id_in_result = '2'
+        search_result = [
+            {
+                'id': '1',
+                'duration': '6:01'
+            },
+            {
+                'id': expected_video_id_in_result,
+                'duration': '5:01'
+            }
+        ]
+        expected_relevant_videos = [{
+            constants.YOUTUBE_SPOTIFY_DURATION_DELTA_DATA_KEY: 1,
+            constants.YOUTUBE_VIDEO_ID_DATA_KEY: expected_video_id_in_result
+        }]
+
+        return_value = YouTube._get_relevant_videos_from_search_result(self.youtube_mock, 300, search_result, len(search_result))
+
+        self.assertEqual(return_value, expected_relevant_videos)
+
+    def test_YouTube_get_available_tied_video_id_to_track_id(self):
+        self.youtube_mock.tied_songs = {
+            'Test': {
+                constants.ORIGIN_SPOTIFY: '1',
+                constants.ORIGIN_YOUTUBE: '2'
+            }
+        }
+
+        return_value = YouTube._get_tied_video_id_to_track_id(self.youtube_mock, '1')
+
+        self.assertEqual(return_value, '2')
+
+    def test_YouTube_get_unavailable_tied_video_id_to_track_id(self):
+        self.youtube_mock.tied_songs = {}
+
+        return_value = YouTube._get_tied_video_id_to_track_id(self.youtube_mock, '1')
+
+        self.assertEqual(return_value, None)
