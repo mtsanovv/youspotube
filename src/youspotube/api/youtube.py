@@ -205,6 +205,7 @@ class YouTube(BaseAPI):
             should_stop_iterating_over_videos = False
             retried_once = False
             while True:
+                response = None
                 try:
                     time.sleep(constants.SLEEP_BETWEEN_PLAYLIST_PUSHES)
                     response = request.execute()
@@ -216,7 +217,8 @@ class YouTube(BaseAPI):
                         continue
                     logging.warning(
                         "An error has occurred while pushing video ID '%s' to YouTube playlist '%s'" % (
-                            video_id, playlist_id
+                            video_id,
+                            playlist_id
                         )
                     )
                     logging.debug(
@@ -366,7 +368,7 @@ class YouTube(BaseAPI):
                     break
 
             if not origin_video_found:
-                logging.warning("Could not find a relevant track on Spotify for: %s, song cannot be synchronized" % (
+                logging.warning("Could not find a relevant track on YouTube for: %s, song cannot be synchronized" % (
                         track[constants.YOUTUBE_VIDEO_TITLE_DATA_KEY]
                     )
                 )
