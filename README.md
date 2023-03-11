@@ -1,7 +1,7 @@
 # youspotube
 Keep in sync all your Spotify playlists with your YouTube playlists.
 
-![build](https://img.shields.io/github/workflow/status/mtsanovv/youspotube/Test%20youspotube)
+![build](https://img.shields.io/github/actions/workflow/status/mtsanovv/youspotube/checks.yml?branch=master)
 ![latest download](https://img.shields.io/github/v/release/mtsanovv/youspotube?style=flat)
 
 ## Before reading on...
