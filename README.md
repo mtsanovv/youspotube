@@ -39,7 +39,7 @@ This was a side project that I created in order to keep my own playlists in sync
 
 Open up a Terminal, navigate to a released binary of youspotube that you have downloaded for your platform and run it.
 
-Alternatively, if you know what you're doing, you can run it with python3 from the directory you've cloned this repository in. First, make sure you have all the requirements installed:
+Alternatively, if you know what you're doing, you can run it with python3 (python 3.7 or newer required) from the directory you've cloned this repository in. First, make sure you have all the requirements installed:
 
 ```
 $ pip3 install -r requirements.txt
