@@ -45,7 +45,7 @@ class Bootstrap:
             self.log_path = os.path.join(log_dir, log_filename)
 
             os.makedirs(constants.LOGS_DIR, exist_ok=True)
-            file_handler = logging.FileHandler(filename=self.log_path, mode='w')
+            file_handler = logging.FileHandler(filename=self.log_path, mode='w', encoding='utf-8')
             file_handler.setFormatter(logging.Formatter(constants.LOGGER_LOG_FILE_FORMAT))
             file_handler.setLevel(logging.DEBUG)
             handlers.append(file_handler)
