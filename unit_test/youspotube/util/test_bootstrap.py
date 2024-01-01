@@ -102,7 +102,7 @@ class BootstrapTest(unittest.TestCase):
 
         bootstrap_mock._is_in_unit_test_mode.assert_called_once()
         makedirs_mock.assert_called_once_with(constants.LOGS_DIR, exist_ok=True)
-        filehandler_mock.assert_called_once_with(filename=log_path, mode='w')
+        filehandler_mock.assert_called_once_with(filename=log_path, mode='w', encoding='utf-8')
         filehandler_mock.return_value.setFormatter.assert_called_once_with(formatter_mock.return_value)
         filehandler_mock.return_value.setLevel.assert_called_once_with(logging_mock.DEBUG)
 
